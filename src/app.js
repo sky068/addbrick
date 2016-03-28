@@ -3,6 +3,7 @@ var Brick_h = 60;
 var RowNum = 6; //默认开始时显示5行
 var ColNum = 4;
 var MoveSpeed = 1;
+var ActMoveSpeed = 10;
 
 var GameLayer = cc.Layer.extend({
     bgLayer:null,
@@ -31,7 +32,7 @@ var GameLayer = cc.Layer.extend({
         this.addChild(bl,1);
 
         //得分显示
-        var label = this.scoreLabel = new cc.LabelTTF('0',  'Times New Roman', 36, cc.size(200,50), cc.TEXT_ALIGNMENT_CENTER);
+        var label = this.scoreLabel = new cc.LabelTTF('0',  'Arial-BoldMT', 40, cc.size(200,50), cc.TEXT_ALIGNMENT_CENTER);
         label.x = size.width/2;
         label.y = size.height - 50;
         this.addChild(label,2);
@@ -40,17 +41,13 @@ var GameLayer = cc.Layer.extend({
 
         this.initBricks();
 
-        //添加停止线
-        var line = this.lineSp = new cc.Sprite(res.Line_png);
-        line.anchorX = 0;
-        line.anchorY = 0;
-        this.addChild(line);
-        line.y = Brick_h * 1.5;
+        //停止线改为绘制
+        var drawNode = this.lineSp = new cc.DrawNode();
+        this.addChild(drawNode);
+        drawNode.drawSegment(cc.p(0,0),cc.p(size.width,0),2,cc.color(255,0,0,255));
+        drawNode.y = Brick_h * 1.5;
 
         this.actBricks = new Array();
-
-        //var mainscene = ccs.load(res.MainScene_json);
-        //this.addChild(mainscene.node);
 
         this.scheduleUpdate();
 
@@ -207,7 +204,7 @@ var GameLayer = cc.Layer.extend({
             var bullet = this.actBricks[i];
             if(bullet)
             {
-                bullet.y += MoveSpeed*6;
+                bullet.y += ActMoveSpeed;
 
                 //碰撞检测var
                 for(var j=0; j<this.allBricks.length; j++)

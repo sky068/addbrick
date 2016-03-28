@@ -1,7 +1,6 @@
 var res = {
     Brick_png   : "res/brick.png",
-    Brick_light_png   : "res/brick_light.png",
-    Line_png    :   "res/line.png"
+    Brick_light_png   : "res/brick_light.png"
 };
 
 var g_resources = [];
