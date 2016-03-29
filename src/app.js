@@ -1,6 +1,6 @@
 var Brick_w = 158;
 var Brick_h = 60;
-var RowNum = 6; //默认开始时显示5行
+var RowNum = 7; //默认开始时显示5行 两行在屏幕外面,防止移动式露馅
 var ColNum = 4;
 var MoveSpeed = 1;
 var ActMoveSpeed = 10;
@@ -100,8 +100,8 @@ var GameLayer = cc.Layer.extend({
                 if(rand != col)
                 {
                     var brick = new Brick();
-                    //第一行在屏幕外面
-                    brick.y = size.height + Brick_h + 1 - (Brick_h+1)*r;
+                    //第一行和第二行在屏幕外面
+                    brick.y = size.height + (Brick_h + 1)*(RowNum-5) - (Brick_h+1)*r;
                     brick.x = (Brick_w+2) * col;
                     this.brickLayer.addChild(brick);
                     rowData.push(brick);
@@ -181,6 +181,13 @@ var GameLayer = cc.Layer.extend({
 
         this.brickLayer.y -= MoveSpeed;
         this.moveLength += MoveSpeed;
+
+        //一旦移动超过一块砖的高度就生成一行
+        var moveLen = Math.ceil(this.moveLength);
+        if((moveLen >= Brick_h) && (moveLen % Brick_h == 0))
+        {
+            this.addRowBricks();
+        }
 
         //检测游戏结束
         var aRow = this.allBricks[this.allBricks.length-1];
@@ -286,13 +293,6 @@ var GameLayer = cc.Layer.extend({
                 }
 
             }
-        }
-
-        //一旦移动超过一块砖的高度就生成一行
-        var moveLen = Math.ceil(this.moveLength);
-        if((moveLen >= Brick_h) && (moveLen % Brick_h == 0))
-        {
-            this.addRowBricks();
         }
 
     }
