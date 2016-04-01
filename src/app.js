@@ -1,13 +1,13 @@
 var Brick_w = 158;
 var Brick_h = 60;
+var Btn_h = 170;
 var RowNum = 7; //默认开始时显示5行 两行在屏幕外面,防止移动式露馅
 var ColNum = 4;
-var MoveSpeed = 1;
-var ActMoveSpeed = 10;
+var MoveSpeed = 1.0;
+var ActMoveSpeed = 10.0 * MoveSpeed;
 
 var GameLayer = cc.Layer.extend({
     bgLayer:null,
-    startFlag:false,
     brickLayer:null,
     allBricks:null,
     actBricks:null,
@@ -23,9 +23,11 @@ var GameLayer = cc.Layer.extend({
 
         var size = cc.winSize;
 
-        //添加灰色背景
-        var bg = this.bgLayer = new cc.LayerColor(cc.color(128,128,128));
-        this.addChild(bg,0);
+        //添加背景图片
+        var bgSp = new cc.Sprite(res.game_bg_jpg);
+        bgSp.x = size.width/2;
+        bgSp.y = size.height/2;
+        this.addChild(bgSp,0);
 
         //添加砖块容器层
         var bl = this.brickLayer = new cc.Layer();
@@ -42,10 +44,17 @@ var GameLayer = cc.Layer.extend({
         this.initBricks();
 
         //停止线改为绘制
-        var drawNode = this.lineSp = new cc.DrawNode();
-        this.addChild(drawNode);
-        drawNode.drawSegment(cc.p(0,0),cc.p(size.width,0),2,cc.color(255,0,0,255));
-        drawNode.y = Brick_h * 1.5;
+        //var drawNode = this.lineSp = new cc.DrawNode();
+        //this.addChild(drawNode);
+        //drawNode.drawSegment(cc.p(0,0),cc.p(size.width,0),2,cc.color(255,0,0,255));
+        //drawNode.y = Brick_h * 1.5;
+
+        var line = this.lineSp = new cc.Sprite(res.line_png);
+        line.anchorX = 0;
+        line.anchorY = 1;
+        line.x = 0;
+        line.y = Btn_h * 1.2;
+        this.addChild(line);
 
         this.actBricks = new Array();
 
@@ -56,28 +65,28 @@ var GameLayer = cc.Layer.extend({
 
     addButton: function ()
     {
-        var item1 = new cc.MenuItemImage(res.Brick_png,res.Brick_light_png);
+        var item1 = new cc.MenuItemImage(res.btn_png,res.btn_light_png);
         item1.setTag(0);
         item1.x = Brick_w/2;
-        item1.y = Brick_h/2;
+        item1.y = Btn_h/2;
         item1.setCallback(this.menuCallback,this);
 
-        var item2 = new cc.MenuItemImage(res.Brick_png,res.Brick_light_png);
+        var item2 = new cc.MenuItemImage(res.btn_png,res.btn_light_png);
         item2.setTag(1);
         item2.x = item1.x + 2 + Brick_w;
-        item2.y = Brick_h/2;
+        item2.y = Btn_h/2;
         item2.setCallback(this.menuCallback,this);
 
-        var item3 = new cc.MenuItemImage(res.Brick_png,res.Brick_light_png);
+        var item3 = new cc.MenuItemImage(res.btn_png,res.btn_light_png);
         item3.setTag(2);
         item3.x = item2.x + 2 + Brick_w;
-        item3.y = Brick_h/2;
+        item3.y = Btn_h/2;
         item3.setCallback(this.menuCallback,this);
 
-        var item4 = new cc.MenuItemImage(res.Brick_png,res.Brick_light_png);
+        var item4 = new cc.MenuItemImage(res.btn_png,res.btn_light_png);
         item4.setTag(3);
         item4.x = item3.x + 2 + Brick_w;
-        item4.y = Brick_h/2;
+        item4.y = Btn_h/2;
         item4.setCallback(this.menuCallback,this);
 
         var menu = new cc.Menu(item1,item2,item3,item4);
@@ -148,7 +157,7 @@ var GameLayer = cc.Layer.extend({
 
     menuCallback:function(target)
     {
-        if(!this.isCanTouch)
+        if(!this.isCanTouch || !MyTools.startFlag)
         {
             return;
         }
@@ -170,10 +179,10 @@ var GameLayer = cc.Layer.extend({
 
     update:function(dt)
     {
-        //if(!this.startFlag)
-        //{
-        //    return;
-        //}
+        if(!MyTools.startFlag)
+        {
+            return;
+        }
 
         //cc.log("update...");
         //cc.log("act len:" + this.actBricks.length);
@@ -186,6 +195,7 @@ var GameLayer = cc.Layer.extend({
         var moveLen = Math.ceil(this.moveLength);
         if((moveLen >= Brick_h) && (moveLen % Brick_h == 0))
         {
+            cc.log("mm:"+moveLen/Brick_h);
             this.addRowBricks();
         }
 
@@ -201,7 +211,15 @@ var GameLayer = cc.Layer.extend({
                 {
                     this.unscheduleUpdate();
                     this.isCanTouch = false;
-                    alert("game over,clear rows:" + this.clearLineNum);
+                    MyTools.startFlag = false;
+
+                    var gameover = new GameoverLayer();
+                    this.addChild(gameover,10);
+                    gameover.scale = 0.1;
+                    var scto = cc.scaleTo(0.5,1);
+                    var rtb = cc.rotateBy(0.5,360);
+                    gameover.runAction(cc.spawn(scto,rtb));
+                    //alert("game over,clear rows:" + this.clearLineNum);
                 }
             }
         }
@@ -283,6 +301,11 @@ var GameLayer = cc.Layer.extend({
                                                 }
                                             }
                                         }
+                                        //if(this.clearLineNum %10 == 0)
+                                        //{
+                                        //    MoveSpeed += 0.5;
+                                        //    cc.log("movespeed:" + MoveSpeed);
+                                        //}
                                         return;
                                     }
                                 }
@@ -304,6 +327,12 @@ var GameScene = cc.Scene.extend({
         this._super();
         var layer = new GameLayer();
         this.addChild(layer);
+
+        var startLayer = new StartLayer();
+        this.addChild(startLayer);
+
+        //var gameover = new GameoverLayer();
+        //this.addChild(gameover);
     }
 });
 
