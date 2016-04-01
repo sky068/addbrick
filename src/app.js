@@ -213,7 +213,7 @@ var GameLayer = cc.Layer.extend({
                     this.isCanTouch = false;
                     MyTools.startFlag = false;
 
-                    var gameover = new GameoverLayer();
+                    var gameover = new GameoverLayer(MyTools.getRandName(),this.clearLineNum);
                     this.addChild(gameover,10);
                     gameover.scale = 0.1;
                     var scto = cc.scaleTo(0.5,1);

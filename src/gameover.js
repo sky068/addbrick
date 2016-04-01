@@ -2,8 +2,6 @@
  * Created by xujw on 16/4/1.
  */
 var GameoverLayer = cc.Layer.extend({
-    nameLabel:null,
-    score:0,
     ctor:function(chenghao,score)
     {
         this._super();
@@ -18,7 +16,51 @@ var GameoverLayer = cc.Layer.extend({
         icon.y = bg.getContentSize().height/3 * 1.8;
         bg.addChild(icon);
 
-        var label = this.nameLabel = new cc.LabelTTF('"江湖补强王"',"Arial-BoldMT",38);
+        /*----------------个十百千 显示----------------*/
+        if(!score)
+        {
+            score = 0;
+        }
+        if(score > 9999)
+        {
+            score = 9999;
+        }
+        if(!chenghao || chenghao=="")
+        {
+            chenghao = '"江湖补墙王"';
+        }
+
+        var qian = Math.floor(score / 1000);
+        var qianLabel = new cc.LabelTTF(qian.toString(),"Arial-BoldMT",50);
+        qianLabel.setColor(cc.color(255,0,0));
+        qianLabel.x = 146;
+        qianLabel.y = 172;
+        icon.addChild(qianLabel);
+
+        var bai = Math.floor(score % 1000 / 100);
+        var baiLabel = new cc.LabelTTF(bai.toString(),"Arial-BoldMT",50);
+        baiLabel.setColor(cc.color(255,0,0));
+        baiLabel.x = 208;
+        baiLabel.y = 172;
+        icon.addChild(baiLabel);
+
+        var shi = Math.floor(score % 1000 % 100 / 10);
+        var shiLabel = new cc.LabelTTF(shi.toString(),"Arial-BoldMT",50);
+        shiLabel.setColor(cc.color(255,0,0));
+        shiLabel.x = 270;
+        shiLabel.y = 172;
+        icon.addChild(shiLabel);
+
+        var ge = Math.floor( score % 10);
+        var geLabel = new cc.LabelTTF(ge.toString(),"Arial-BoldMT",50);
+        geLabel.setColor(cc.color(255,0,0));
+        geLabel.x = 332;
+        geLabel.y = 172;
+        icon.addChild(geLabel);
+        /*-----------------------------------*/
+
+        /*----------------称谓---------------*/
+        var label = new cc.LabelTTF(chenghao,"Arial-BoldMT",40);
         label.setColor(cc.color(255,0,0));
         label.x = icon.getContentSize().width/2;
         label.y = icon.getContentSize().height/6;
@@ -26,18 +68,20 @@ var GameoverLayer = cc.Layer.extend({
 
         var huode = new cc.LabelTTF("获得","Arial",30);
         huode.anchorX = 1;
-        huode.x = 100 ;
+        huode.x = 105 ;
         huode.y = label.y - 3;
         huode.setColor(cc.color(255,0,0));
         icon.addChild(huode);
 
         var chenghao = new cc.LabelTTF("称号","Arial",30);
         chenghao.anchorX = 0;
-        chenghao.x = icon.getContentSize().width - 100 ;
+        chenghao.x = icon.getContentSize().width - 105 ;
         chenghao.y = label.y - 3;
         chenghao.setColor(cc.color(255,0,0));
         icon.addChild(chenghao);
+        /*-------------------------------------*/
 
+        /*-----------------分享-----------------*/
         var share = new cc.LabelTTF("分享到","Arial",26);
         share.x = 100;
         share.y = bg.getContentSize().height/4;
