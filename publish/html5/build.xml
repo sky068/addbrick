@@ -179,6 +179,7 @@
                 <file name="src/mytools.js"/>
                 <file name="src/startlayer.js"/>
                 <file name="src/gameover.js"/>
+                <file name="src/myloading.js"/>
                 <file name="main.js"/>
 
             </sources>

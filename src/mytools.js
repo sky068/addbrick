@@ -17,7 +17,7 @@ var MyTools = {
 
     getRandName:function()
     {
-        var names = ["江湖补墙王","补墙大师兄","神一般的存在"];
+        var names = ["补墙小湿妹","补墙大湿胸","补墙二湿弟"];
         var r = Math.floor(Math.random()*3);
         return names[r];
     }
