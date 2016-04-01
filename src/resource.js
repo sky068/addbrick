@@ -13,7 +13,8 @@ var res = {
     gameover_share_weibo_png : "res/y_s3_share_weibo.png",
     gameover_share_weixin_png : "res/y_s3_share_weixin.png",
     gameover_share_zone_png : "res/y_s3_share_zone.png",
-    gameover_share_teng_png : "res/y_s3_share_teng.png"
+    gameover_share_teng_png : "res/y_s3_share_teng.png",
+    mylogo_png : "res/mylogo.png"
 
 };
 
