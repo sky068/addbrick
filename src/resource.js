@@ -1,7 +1,7 @@
 var res = {
     Brick_png   : "res/brick.png",
-    btn_png : "res/btn.png",
-    btn_light_png   : "res/btn_light.png",
+    btn_png : "res/btn_light.png",
+    btn_light_png   : "res/btn.png",
     line_png : "res/line.png",
     logo_png : "res/logo.png",
     start_bg_jpg : "res/y_s1_bg.jpg",
